@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>EmailGuard - Home</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- JS Library #1: Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- JS Library #2: Day.js + relative time plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/dayjs/dayjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs/plugin/relativeTime.js"></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/checker.html">Checker</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>EmailGuard</h1>
+    <p>Check email reputation and keep a history of lookups.</p>
+
+    <div class="card">
+      <h3>Reputation Summary</h3>
+      <canvas id="repChart" height="120"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>Recent Lookups</h3>
+      <div id="errorBox" style="color:#dc3545;"></div>
+      <ul id="recentList"></ul>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

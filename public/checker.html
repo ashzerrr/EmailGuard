@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>EmailGuard - Checker</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/dayjs/dayjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dayjs/plugin/relativeTime.js"></script>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/checker.html">Checker</a>
+      <a href="/about.html">About</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h1>Email Reputation Checker</h1>
+
+    <div class="row">
+      <input id="emailInput" type="email" placeholder="Enter email (example@gmail.com)" />
+      <button id="checkBtn">Check</button>
+    </div>
+
+    <div id="errorBox" style="margin-top:12px;color:#dc3545;"></div>
+
+    <div id="resultBox" class="card" style="display:none;">
+      <h3>Results for: <span id="emailLabel"></span></h3>
+      <p><strong>Reputation:</strong> <span id="repBadge"></span></p>
+      <p><strong>Suspicious:</strong> <span id="suspiciousLabel"></span></p>
+      <p><strong>References:</strong> <span id="referencesLabel"></span></p>
+      <p><strong>Data Breach:</strong> <span id="breachLabel"></span></p>
+      <p><strong>Credentials Leaked:</strong> <span id="credsLabel"></span></p>
+      <p><strong>Spam:</strong> <span id="spamLabel"></span></p>
+      <p><strong>Disposable:</strong> <span id="disposableLabel"></span></p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

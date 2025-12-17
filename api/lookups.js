@@ -1,22 +1,23 @@
-const { createClient } = require("@supabase/supabase-js");
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // GET recent lookups
   if (req.method === "GET") {
     const limit = Number(req.query.limit) || 10;
 
     const { data, error } = await supabase
-      .from("email_lookups") // ✅ correct table name
+      .from("email_lookups")
       .select("*")
       .order("checked_at", { ascending: false })
       .limit(limit);
 
     if (error) {
+      console.error("Supabase SELECT error:", error);
       return res.status(500).json({ error: error.message });
     }
 
@@ -28,16 +29,17 @@ module.exports = async (req, res) => {
     const { email, reputation, suspicious, references } = req.body;
 
     const { error } = await supabase
-      .from("email_lookups") // ✅ correct table name
+      .from("email_lookups")
       .insert({
         email,
         reputation,
         suspicious,
-        reference_count: references, // ✅ match column name
+        reference_count: references,
         checked_at: new Date().toISOString()
       });
 
     if (error) {
+      console.error("Supabase INSERT error:", error);
       return res.status(500).json({ error: error.message });
     }
 
@@ -45,4 +47,4 @@ module.exports = async (req, res) => {
   }
 
   return res.status(405).json({ error: "Method not allowed" });
-};
+}

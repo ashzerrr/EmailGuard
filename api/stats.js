@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
     return res.status(200).json({
       repCounts: {
         high: 0,
@@ -7,5 +7,5 @@ export default async function handler(req, res) {
         none: 1
       }
     });
-  }
+  };
   

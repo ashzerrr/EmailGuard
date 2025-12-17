@@ -1,4 +1,4 @@
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Method not allowed" });
     }
@@ -9,7 +9,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Email required" });
     }
   
-    // MOCK RESULT (works without EmailRep)
     return res.status(200).json({
       result: {
         email,
@@ -24,5 +23,5 @@ export default async function handler(req, res) {
         }
       }
     });
-  }
+  };
   

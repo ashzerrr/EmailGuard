@@ -32,29 +32,26 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       return res.status(response.status).json({
-        error: "EmailRep API rejected request",
+        error: "EmailRep API error",
         details: data
       });
     }
 
-    // Save to Supabase
-    await supabase.from("email_lookups").insert([
-      {
-        email: data.email,
-        reputation: data.reputation ?? "none",
-        suspicious: Boolean(data.suspicious),
-        reference_count: Number(data.references) || 0,
-        data_breach: Boolean(data.details?.data_breach),
-        credentials_leaked: Boolean(data.details?.credentials_leaked),
-        spam: Boolean(data.details?.spam),
-        disposable: Boolean(data.details?.disposable)
-      }
-    ]);
+    await supabase.from("email_lookups").insert([{
+      email: data.email,
+      reputation: data.reputation ?? "none",
+      suspicious: Boolean(data.suspicious),
+      reference_count: Number(data.references) || 0,
+      data_breach: Boolean(data.details?.data_breach),
+      credentials_leaked: Boolean(data.details?.credentials_leaked),
+      spam: Boolean(data.details?.spam),
+      disposable: Boolean(data.details?.disposable)
+    }]);
 
     return res.status(200).json({ result: data });
 
   } catch (err) {
-    console.error("SERVERLESS ERROR:", err);
-    return res.status(500).json({ error: "Server failed" });
+    console.error("CHECK EMAIL ERROR:", err);
+    return res.status(500).json({ error: "Server error" });
   }
 }

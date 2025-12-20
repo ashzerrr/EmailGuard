@@ -5,9 +5,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { createClient } from "@supabase/supabase-js";
 
-/* =======================
-   BASIC SETUP
-======================= */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -15,31 +12,22 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-/* =======================
-   SUPABASE CLIENT
-======================= */
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
 );
 
 /* =======================
-   POST /api/check-email
-   → Calls EmailRep
-   → Saves result to Supabase
+   EMAIL CHECK
 ======================= */
 app.post("/api/check-email", async (req, res) => {
   const { email } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ error: "Email required" });
-  }
+  if (!email) return res.status(400).json({ error: "Email required" });
 
   try {
     const response = await fetch(
       `https://emailrep.io/${encodeURIComponent(email)}`,
       {
-        method: "GET",
         headers: {
           "User-Agent": "EmailGuard/1.0",
           "Accept": "application/json",
@@ -49,106 +37,77 @@ app.post("/api/check-email", async (req, res) => {
     );
 
     const data = await response.json();
-
-    console.log("EmailRep RAW response:", data);
+    console.log("EmailRep RAW:", data);
 
     if (!response.ok) {
       return res.status(response.status).json({
-        error: "EmailRep API error",
+        error: "EmailRep API rejected request",
         details: data
       });
     }
 
-    /* SAVE RESULT TO SUPABASE */
-    await supabase.from("email_lookups").insert([
+    const { error } = await supabase.from("email_lookups").insert([
       {
         email: data.email,
         reputation: data.reputation ?? "none",
         suspicious: Boolean(data.suspicious),
-        reference_count: Number.isFinite(data.references)
-          ? data.references
-          : 0
+        reference_count: Number(data.references) || 0,
+        data_breach: Boolean(data.details?.data_breach),
+        credentials_leaked: Boolean(data.details?.credentials_leaked),
+        spam: Boolean(data.details?.spam),
+        disposable: Boolean(data.details?.disposable)
       }
     ]);
+
+    if (error) {
+      console.error("SUPABASE INSERT ERROR:", error);
+    }
 
     res.json({ result: data });
 
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to process email" });
+    console.error("SERVER ERROR:", err);
+    res.status(500).json({ error: "Server failure" });
   }
 });
 
 /* =======================
-   GET /api/lookups
-   → Recent email lookups
+   RECENT LOOKUPS
 ======================= */
 app.get("/api/lookups", async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from("email_lookups")
-      .select("*")
-      .order("checked_at", { ascending: false })
-      .limit(10);
+  const { data, error } = await supabase
+    .from("email_lookups")
+    .select("*")
+    .order("checked_at", { ascending: false })
+    .limit(10);
 
-    if (error) throw error;
-
-    res.json({ lookups: data });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to fetch lookups" });
-  }
+  if (error) return res.status(500).json({ error: "Lookup fetch failed" });
+  res.json({ lookups: data });
 });
 
 /* =======================
-   GET /api/stats
-   → Aggregated data for chart
+   STATS
 ======================= */
 app.get("/api/stats", async (req, res) => {
-  try {
-    const { data, error } = await supabase
-      .from("email_lookups")
-      .select("reputation, suspicious");
+  const { data, error } = await supabase
+    .from("email_lookups")
+    .select("reputation, suspicious");
 
-    if (error) throw error;
+  if (error) return res.status(500).json({ error: "Stats fetch failed" });
 
-    const repCounts = {
-      high: 0,
-      medium: 0,
-      low: 0,
-      none: 0
-    };
+  const repCounts = { high: 0, medium: 0, low: 0, none: 0 };
+  let suspiciousYes = 0;
+  let suspiciousNo = 0;
 
-    let suspiciousYes = 0;
-    let suspiciousNo = 0;
+  data.forEach(row => {
+    repCounts[row.reputation ?? "none"]++;
+    row.suspicious ? suspiciousYes++ : suspiciousNo++;
+  });
 
-    for (const row of data) {
-      const rep = row.reputation ?? "none";
-      repCounts[rep] = (repCounts[rep] ?? 0) + 1;
-
-      row.suspicious ? suspiciousYes++ : suspiciousNo++;
-    }
-
-    res.json({
-      repCounts,
-      suspicious: {
-        yes: suspiciousYes,
-        no: suspiciousNo
-      }
-    });
-
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Failed to generate stats" });
-  }
+  res.json({ repCounts, suspicious: { yes: suspiciousYes, no: suspiciousNo } });
 });
 
-/* =======================
-   START SERVER
-======================= */
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
   console.log(`✅ Server running at http://localhost:${PORT}`);
 });

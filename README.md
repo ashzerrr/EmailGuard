@@ -12,3 +12,5 @@ EmailGuard is a web application that checks email address reputation using Email
 ## Developer Manual
 [Developer Manual](docs/developer-manual.md)
 
+## Link to Vercel Deployment 
+https://email-guard-alpha.vercel.app/

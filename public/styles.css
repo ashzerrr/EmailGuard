@@ -1,71 +1,242 @@
+/* =========================
+   GLOBAL STYLES
+========================= */
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background: #eef4ff;
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #f4f7fb, #eef2f7);
+  color: #1f2937;
+  line-height: 1.6;
+}
+
+/* =========================
+   HEADER / NAVIGATION
+========================= */
+
+header {
+  background: #1e3a8a;
+  color: white;
+  padding: 1.25rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+}
+
+nav {
+  display: flex;
+  gap: 2rem;
+}
+
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  padding-bottom: 4px;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 2px;
+  background: #93c5fd;
+  transition: width 0.3s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
+main {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* =========================
+   CARD STYLES
+========================= */
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* =========================
+   HEADINGS
+========================= */
+
+h1,
+h2,
+h3 {
+  margin-top: 0;
+  color: #1e3a8a;
+}
+
+/* =========================
+   INPUTS & BUTTONS
+========================= */
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+button {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+  opacity: 0.95;
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* =========================
+   RESULT BOX
+========================= */
+
+#resultBox {
+  margin-top: 1.5rem;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
   }
-  
-  header {
-    background: #2a4d9b;
-    color: white;
-    padding: 16px 20px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  nav a {
-    color: white;
-    margin-right: 14px;
-    text-decoration: none;
-    font-weight: bold;
-  }
-  
-  .container {
-    max-width: 900px;
-    margin: 24px auto;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-  }
-  
-  input, button {
-    font-size: 16px;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #d0d7e6;
-  }
-  
-  button {
-    background: #2a4d9b;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .row {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .row > * {
-    flex: 1;
-  }
-  
-  .card {
-    background: #f4f7ff;
-    padding: 16px;
-    border-radius: 10px;
-    margin-top: 16px;
-  }
-  
-  .badge {
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-weight: bold;
-    color: white;
-    display: inline-block;
-  }
-  .high { background: #28a745; }
-  .medium { background: #ffc107; color: black; }
-  .low { background: #dc3545; }
-  .none { background: #6c757d; }
-  
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: white;
+}
+
+.badge.high {
+  background: #16a34a;
+}
+
+.badge.medium {
+  background: #f59e0b;
+}
+
+.badge.low {
+  background: #dc2626;
+}
+
+.badge.none {
+  background: #6b7280;
+}
+
+/* =========================
+   LISTS
+========================= */
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul li {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+ul li:hover {
+  background-color: #f1f5f9;
+}
+
+/* =========================
+   ERROR MESSAGE
+========================= */
+
+#errorBox {
+  color: #dc2626;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+/* =========================
+   CHART SIZE CONTROL
+========================= */
+
+#repChart {
+  max-width: 500px;
+  max-height: 300px;
+  margin: 1.5rem auto;
+  display: block;
+}
+.chart-card {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}

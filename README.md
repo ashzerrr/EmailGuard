@@ -10,4 +10,5 @@ EmailGuard is a web application that checks email address reputation using Email
 - Safari (desktop)
 
 ## Developer Manual
-See: `docs/developer-manual.md`
+[Developer Manual](docs/developer-manual.md)
+

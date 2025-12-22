@@ -10,9 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-/* =======================
-   CHECKER PAGE
-======================= */
+/* Chercher page handler */
 async function runEmailCheck() {
   const emailInput = document.getElementById("emailInput");
   const errorBox = document.getElementById("errorBox");
@@ -61,9 +59,8 @@ async function runEmailCheck() {
   }
 }
 
-/* =======================
-   HOME PAGE: RECENT LOOKUPS
-======================= */
+/*Home page: Recent lookups*/
+
 async function loadRecentLookups() {
   const list = document.getElementById("recentList");
   if (!list) return;
@@ -90,9 +87,8 @@ async function loadRecentLookups() {
   }
 }
 
-/* =======================
-   HOME PAGE: STATS GRAPH
-======================= */
+/*Home page: Stats graph */
+
 async function loadStats() {
   const canvas = document.getElementById("repChart");
   if (!canvas) return;
